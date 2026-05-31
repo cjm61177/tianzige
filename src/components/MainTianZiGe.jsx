@@ -2,8 +2,10 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import HanziWriter from 'hanzi-writer';
 
 // Custom data loader — loads from local public/hanzi-data/ instead of CDN
+const BASE = import.meta.env.BASE_URL;
+
 function localCharDataLoader(char, onLoadCharDataSuccess, onLoadCharDataError) {
-  fetch(`/hanzi-data/${char}.json`)
+  fetch(`${BASE}hanzi-data/${char}.json`)
     .then((res) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();
