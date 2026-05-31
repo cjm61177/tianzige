@@ -1,0 +1,337 @@
+/* ============ Layout ============ */
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.app-header {
+  text-align: center;
+  padding-top: 16px;
+}
+
+.app-header h1 {
+  font-family: 'Noto Serif SC', 'Noto Sans SC', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.app-header .subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* ============ Input ============ */
+.input-area {
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+}
+
+.char-input {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 22px;
+  font-family: 'Noto Serif SC', 'Noto Sans SC', serif;
+  text-align: center;
+  letter-spacing: 4px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow);
+}
+
+.char-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(196, 69, 54, 0.15);
+}
+
+.char-input::placeholder {
+  color: #c4b9a8;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.input-hint {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ============ Main 田字格 ============ */
+.main-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.main-tianzige-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.main-tianzige {
+  width: 360px;
+  height: 360px;
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* 田字格 grid lines drawn via CSS */
+.main-tianzige::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  /* Cross lines — dashed horizontal + vertical center lines */
+  background:
+    linear-gradient(to right, transparent calc(50% - 0.5px), var(--grid-line) calc(50% - 0.5px), var(--grid-line) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom, transparent calc(50% - 0.5px), var(--grid-line) calc(50% - 0.5px), var(--grid-line) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+}
+
+/* Outer border */
+.main-tianzige::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  border: 2.5px solid var(--text);
+  border-radius: var(--radius);
+}
+
+/* HanziWriter SVG sits above grid lines */
+.main-tianzige svg {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 480px) {
+  .main-tianzige {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+.tianzige-error {
+  width: 360px;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-secondary);
+  font-size: 16px;
+  text-align: center;
+  padding: 24px;
+}
+
+@media (max-width: 480px) {
+  .tianzige-error {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+/* ============ Controls ============ */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stroke-info {
+  font-size: 17px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.stroke-info strong {
+  color: var(--primary);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 8px 18px;
+  font-size: 15px;
+  font-family: 'Noto Sans SC', sans-serif;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  background: #f0e6d3;
+  color: var(--text);
+}
+.btn-secondary:hover {
+  background: #e5d8c0;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+.btn-outline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ============ Speed Control ============ */
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.speed-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.btn-sm {
+  padding: 4px 14px;
+  font-size: 13px;
+}
+
+/* ============ Stroke Breakdown ============ */
+.breakdown-section {
+  width: 100%;
+  text-align: center;
+}
+
+.breakdown-section h2 {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.breakdown-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.breakdown-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.breakdown-cell:hover {
+  transform: translateY(-2px);
+}
+
+.breakdown-cell.active .mini-tianzige {
+  box-shadow: 0 0 0 3px var(--primary);
+}
+
+/* Mini 田字格 — now an SVG that self-draws its grid lines */
+.mini-tianzige {
+  width: 80px;
+  height: 80px;
+  display: block;
+  background: var(--surface);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s;
+}
+
+.cell-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.breakdown-cell.active .cell-label {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ============ Empty State ============ */
+.empty-state {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 48px 20px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 480px) {
+  .app {
+    padding: 16px 12px 32px;
+    gap: 20px;
+  }
+
+  .app-header h1 {
+    font-size: 28px;
+  }
+
+  .char-input {
+    font-size: 20px;
+    padding: 12px 16px;
+  }
+
+  .mini-tianzige {
+    width: 64px;
+    height: 64px;
+  }
+}
