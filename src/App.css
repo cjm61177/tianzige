@@ -7,8 +7,18 @@
   flex-direction: column;
   align-items: center;
   gap: 32px;
+  min-height: 100vh;
 }
 
+.page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* ============ Header ============ */
 .app-header {
   text-align: center;
   padding-top: 16px;
@@ -27,6 +37,57 @@
   font-size: 15px;
   color: var(--text-secondary);
   margin-top: 6px;
+}
+
+/* ============ Bottom Nav ============ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+  padding: env(safe-area-inset-bottom, 4px) 0 4px;
+}
+
+.bottom-nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 13px;
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 56px;
+}
+
+.bottom-nav-btn.active {
+  color: var(--primary);
+}
+
+.bottom-nav-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.bottom-nav-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.nav-spacer {
+  height: 60px;
 }
 
 /* ============ Input ============ */
@@ -70,7 +131,7 @@
   margin-top: 8px;
 }
 
-/* ============ Main 田字格 ============ */
+/* ============ Main 田字格 (Stroke Viewer) ============ */
 .main-section {
   width: 100%;
   display: flex;
@@ -96,20 +157,17 @@
   overflow: hidden;
 }
 
-/* 田字格 grid lines drawn via CSS */
 .main-tianzige::before {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  /* Cross lines — dashed horizontal + vertical center lines */
   background:
     linear-gradient(to right, transparent calc(50% - 0.5px), var(--grid-line) calc(50% - 0.5px), var(--grid-line) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
     linear-gradient(to bottom, transparent calc(50% - 0.5px), var(--grid-line) calc(50% - 0.5px), var(--grid-line) calc(50% + 0.5px), transparent calc(50% + 0.5px));
 }
 
-/* Outer border */
 .main-tianzige::after {
   content: '';
   position: absolute;
@@ -120,7 +178,6 @@
   border-radius: var(--radius);
 }
 
-/* HanziWriter SVG sits above grid lines */
 .main-tianzige svg {
   position: relative;
   z-index: 2;
@@ -197,11 +254,16 @@
   transform: scale(0.96);
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .btn-primary {
   background: var(--primary);
   color: #fff;
 }
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   background: var(--primary-hover);
 }
 
@@ -280,7 +342,6 @@
   box-shadow: 0 0 0 3px var(--primary);
 }
 
-/* Mini 田字格 — now an SVG that self-draws its grid lines */
 .mini-tianzige {
   width: 80px;
   height: 80px;
@@ -314,11 +375,351 @@
   line-height: 1.6;
 }
 
+/* ================================================================ */
+/*  Practice Sheet Generator                                       */
+/* ================================================================ */
+
+.practice-sheet-page {
+  gap: 16px;
+}
+
+/* ── Error Banner ─────────────────────────────── */
+.error-banner {
+  width: 100%;
+  padding: 10px 16px;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: var(--radius-sm);
+  color: #856404;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ── Sheet Preview ─────────────────────────────── */
+.sheet-preview-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.sheet-preview {
+  width: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-height: 60vh;
+  display: flex;
+  justify-content: center;
+}
+
+.sheet-img {
+  display: block;
+  max-width: none;
+  min-width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ── Page Navigation ───────────────────────────── */
+.page-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.page-indicator {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* ============ Char Input Area (Practice Sheet) ============ */
+.char-input-area {
+  width: 100%;
+  max-width: 500px;
+}
+
+.char-input-area .config-label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.config-input-char {
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 4px;
+  font-family: 'Noto Serif SC', 'Noto Sans SC', serif;
+}
+
+.char-input-area .input-hint {
+  font-size: 13px;
+  color: var(--accent);
+  margin-top: 6px;
+}
+
+/* ── Export Buttons ────────────────────────────── */
+.export-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 24px;
+  font-size: 15px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-weight: 500;
+}
+
+.btn-export:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-export-pdf:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Config Panel ──────────────────────────────── */
+.sheet-config {
+  position: fixed;
+  bottom: 60px; /* Above the bottom nav */
+  left: 0;
+  right: 0;
+  z-index: 99;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 16px 16px 0 0;
+  transition: max-height 0.3s ease;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.sheet-config.collapsed {
+  max-height: 48px;
+  overflow: hidden;
+}
+
+.config-toggle {
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+}
+
+.config-toggle-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.config-body {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.config-spacer {
+  height: 200px; /* Enough space so content isn't hidden behind config panel */
+}
+
+/* ── Config Groups ─────────────────────────────── */
+.config-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.config-group-half {
+  flex: 1;
+}
+
+.config-row {
+  display: flex;
+  gap: 12px;
+}
+
+.config-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.config-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.config-options-sm {
+  gap: 4px;
+}
+
+.config-option {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-family: 'Noto Sans SC', sans-serif;
+  background: #f5f0e8;
+  color: var(--text);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 44px;
+  min-width: 44px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.config-option:active {
+  transform: scale(0.96);
+}
+
+.config-option.selected {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.config-option-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+  min-height: 36px;
+  min-width: 36px;
+}
+
+.config-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.config-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 16px;
+  font-family: 'Noto Sans SC', sans-serif;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.config-input:focus {
+  border-color: var(--primary);
+}
+
+.config-add-btn {
+  margin-top: 8px;
+  width: 100%;
+  min-height: 44px;
+}
+
+/* ── Word Input ────────────────────────────────── */
+.word-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.word-input-row .config-input {
+  flex: 1;
+}
+
+.word-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.word-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #f0e6d3;
+  border-radius: 16px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.word-tag-remove {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+  min-height: 24px;
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.word-group-list {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.word-group-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #f5f0e8;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+
+.word-group-char {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 18px;
+}
+
+.word-group-word {
+  color: var(--text-secondary);
+}
+
 /* ============ Responsive ============ */
 @media (max-width: 480px) {
   .app {
-    padding: 16px 12px 32px;
-    gap: 20px;
+    padding: 12px 10px 48px;
+    gap: 16px;
   }
 
   .app-header h1 {
@@ -333,5 +734,59 @@
   .mini-tianzige {
     width: 64px;
     height: 64px;
+  }
+
+  .practice-sheet-page {
+    gap: 12px;
+  }
+
+  .btn-export {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .config-input-char {
+    font-size: 18px;
+    padding: 12px 14px;
+  }
+
+  .sheet-config {
+    max-height: 55vh;
+  }
+
+  .sheet-config.collapsed {
+    max-height: 42px;
+  }
+}
+
+@media (min-width: 768px) {
+  /* On desktop, config panel is not fixed */
+  .sheet-config {
+    position: static;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    max-height: none;
+    overflow: visible;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .sheet-config.collapsed .config-body {
+    display: flex; /* Always show on desktop */
+  }
+
+  .config-toggle {
+    display: none;
+  }
+
+  .config-spacer {
+    height: 0;
+  }
+
+  .sheet-preview {
+    max-width: 420px;
   }
 }
