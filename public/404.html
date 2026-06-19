@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>田字格 — 汉字笔画学习</title>
+    <script>
+      // SPA GitHub Pages fallback (rafgraph/spa-github-pages technique).
+      // GitHub Pages serves this file for any path that doesn't exist on disk.
+      // We rewrite `/tianzige/sheet` → `/tianzige/?/sheet` and let index.html
+      // restore the real path via history.replaceState.
+      //
+      // pathSegmentsToKeep = 1 because the project is hosted under `/tianzige/`,
+      // i.e. one segment of base path that must NOT be encoded into the query.
+      (function () {
+        var pathSegmentsToKeep = 1;
+        var l = window.location;
+        l.replace(
+          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+          l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
+          '/?/' +
+          l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+        );
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
